@@ -5,8 +5,9 @@ import {useState, useEffect} from 'react'
 import axios from 'axios'
 import { Strapi } from '../types'
 import { useShoppingCart } from '../context/ShoppingCartContext'
-import New from '../components/New'
 import { BsHeart, BsHeartFill} from 'react-icons/bs'
+import Newp from "../components/Newp"
+import {motion} from 'framer-motion'
 
 
 
@@ -33,9 +34,10 @@ const Singlepage = ({strap}: Strapi) => {
       {post && (document.title = `${post?.attributes?.title} ${post?.attributes?.desc}`)}     
       
     return (
-        <div>
+        <motion.div className="flex flex-col items-center" initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0, transition: {duration: 0.1}} } transition={{duration: 1}} >
+            <div className="min-h-[80vh]">
             {post && (
-                <div className='flex p-10 gap-2 justify-center '>
+                <div className='flex p-10 gap-2 justify-center min-h-[80vh]'>
                     <div className='flex'>
                         <div className='w-[120px]'>                                                     
                             <img src={process.env.REACT_APP_UPLOAD_URL+post?.attributes?.img?.data?.attributes?.url} alt="" className='object-fit h-[120px] cursor-pointer' onClick={(e) => setSelectedImg('img')} />
@@ -59,7 +61,9 @@ const Singlepage = ({strap}: Strapi) => {
                     </div>
                 </div>
             )}
-        </div>
+            </div>
+            <Newp strap={strap} />
+        </motion.div>
     )
 }
 

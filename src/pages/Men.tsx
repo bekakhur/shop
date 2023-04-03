@@ -3,18 +3,19 @@ import { Itemsp } from "../types"
 import { Strapi } from "../types"
 import { BsHeart, BsHeartFill} from 'react-icons/bs'
 import Filter from "../components/Filter"
+import {motion} from 'framer-motion'
 
 export function Men ({strap}: Strapi) {
     document.title = `Men's Fashion`
     return (
-    <div className="flex">
+    <motion.div className="flex" initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0, transition: {duration: 0.1}} } transition={{duration: 1}}>
         <Filter />
         <div className="min-w-[75vw] flex justify-center">
          <div className="grid grid-cols-3  gap-24 px-8 pb-10">{strap.map((item) => {   
-            if (item.attributes.sub_categories.data[0]?.attributes?.title === 'Hat') {  
             return (
                 <div key={item.id} className="flex justify-center py-6">
                     <div className='hover:cursor-pointer relative'>
+                        {item.attributes?.type === "tranding" ? <p className="absolute z-30 bg-yellow-300 tracking-widest m-1 text-sm px-[6px] pb-[2px] shadow-md rounded-sm text-white">NEW</p> : null}
                         <BsHeart className="absolute z-30 right-0 h-8 w-8 p-2 hover:opacity-0 bg-white hover:bg-gray-100 rounded-lg transition-all duration-300" />
                         <BsHeartFill className="absolute z-20 right-0 h-8 w-8 p-2 bg-gray-100 rounded-lg text-gray-800" />
                         <Link  to={`/${item.id}`} >
@@ -31,11 +32,11 @@ export function Men ({strap}: Strapi) {
                             </Link>
                     </div>
                 </div>
-            )}
+            )
         
             })} 
         </div>  
         </div>
-    </div>
+    </motion.div>
     )
 }

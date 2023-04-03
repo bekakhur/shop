@@ -8,11 +8,6 @@ export type Itemsp = {
     }[]
 }
 
-export type Homedp = {
-    itemsporpsh: {
-        id: number 
-    }[]
-}
 
 export type Strapi = {
     strap: {
@@ -21,6 +16,7 @@ export type Strapi = {
             title: string 
             price: number 
             desc: string
+            type: string
             img: {
                 data: {
                     attributes: {
