@@ -26,7 +26,7 @@ const Navbar = () => {
     <div className='w-screen h-[80px] z-50 bg-zinc-200 fixed drop-shadow-sm'>
         <div className='flex justify-between items-center w-full h-full px-24'>
             <div className='flex items-center h-full'>
-                <NavLink to="/"><h1 className='text-3xl font-bold mr-4 sm:text-4xl cursor-pointer'>STORE</h1></NavLink>            
+                <NavLink to="/shop"><h1 className='text-3xl font-bold mr-4 sm:text-4xl cursor-pointer'>STORE</h1></NavLink>            
                 <ul className='hidden md:flex'> 
                     <NavLink to="/women"><li>Women</li></NavLink> 
                     <NavLink to="/men"><li onMouseEnter={() => setDropdown(true)} onMouseLeave={() => setDropdown(false)}>Men</li></NavLink>

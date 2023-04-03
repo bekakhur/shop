@@ -2,7 +2,7 @@
   "name": "type-second-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://bekakhur.github.io/",
+  "homepage": "https://bekakhur.github.io/shop",
   "dependencies": {
     "@heroicons/react": "^2.0.14",
     "@reduxjs/toolkit": "^1.9.3",
