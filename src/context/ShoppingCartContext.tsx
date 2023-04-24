@@ -10,13 +10,21 @@ type CartItem = {
     quantity: number 
 } 
 
+type WishItem = {
+    id: number 
+    add: number
+} 
+
 type ShoppingCartContext = {
     getItemQuantity: (id: number) => number
     increaseCartQuantity: (id: number) => void
+    addWish: (id: number) => void 
     decreaseCartQuantity: (id: number) => void
     removeFromCart: (id: number) => void   
     cartQuantity: number 
+    wishQuantity: number
     cartItems: CartItem[]
+    wish: WishItem[]
     rem: () => void 
 }
 
@@ -29,8 +37,13 @@ export function useShoppingCart() {
 
 export function ShoppingCartProvider({children}: ShoppingCartProviderProps) {
     const [cartItems, setCartItems] = useLocalStorage<CartItem[]>("shopping-cart",[])
+    const [wish, setWish] = useLocalStorage<WishItem[]>("wish",[])
     const cartQuantity = cartItems.reduce(
         (quantity, item) => item.quantity + quantity,
+        0
+    )
+    const wishQuantity = wish.reduce(
+        (quantity, item) => item.add + quantity,
         0
     )
 
@@ -47,6 +60,13 @@ export function ShoppingCartProvider({children}: ShoppingCartProviderProps) {
         })
     }
 
+    function addWish(id: number) {
+        setWish(currItems => {
+            if (currItems.find(item => item.id === id) == null) {
+                return [...currItems, {id, add: 1}]
+            } else return currItems.filter(item => item.id !== id)
+        })
+    }
 
     function decreaseCartQuantity(id: number) {
         setCartItems(currItems => {
@@ -77,7 +97,7 @@ export function ShoppingCartProvider({children}: ShoppingCartProviderProps) {
     }
 
     return (
-        <ShoppingCartContext.Provider value={{getItemQuantity, increaseCartQuantity, decreaseCartQuantity, removeFromCart, rem, cartItems, cartQuantity}}>
+        <ShoppingCartContext.Provider value={{getItemQuantity, increaseCartQuantity, addWish, decreaseCartQuantity, removeFromCart, rem, wish, cartItems, cartQuantity, wishQuantity}}>
             {children}
         </ShoppingCartContext.Provider>
     )

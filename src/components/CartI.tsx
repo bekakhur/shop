@@ -9,8 +9,6 @@ type CartIprops = {
     quantity: number 
 }
 
-const g = [1,2,3,4,5,6]
-
 const CartI = ({id, quantity, strap}:any) => {
 
     const {removeFromCart} = useShoppingCart()

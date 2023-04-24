@@ -1,18 +1,22 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {NavLink} from 'react-router-dom'
 import Login from '../pages/Login'
 import { BsHeart, BsHandbag, BsPerson, BsSearch, BsPersonFill} from 'react-icons/bs'
 import { useShoppingCart } from '../context/ShoppingCartContext'
 import { motion } from 'framer-motion'
+import axios from 'axios'
 
 const Navbar = () => {
     const [nav, setNav] = useState(false)
     const [search, setSearch] = useState(false)
     const handleClick = () => setNav(!nav)
 
+    const [homed, setHomed] = useState<any>()
+    const [nu, setNu] = useState<any>()
+
     const [dropdown, setDropdown] = useState(false)
 
-    const {cartQuantity} = useShoppingCart()
+    const {cartQuantity, wishQuantity} = useShoppingCart()
 
     const [modalOn, setModalOn] = useState(false)
     const [choice, setChoice] = useState(false)
@@ -21,6 +25,19 @@ const Navbar = () => {
     } 
 
 
+    useEffect(() => {
+        axios.get(
+                    process.env.REACT_APP_API_URL + "/categories?populate=*",
+                 {
+                    headers: {
+                         Authorization: "bearer " + process.env.REACT_APP_API_TOKEN,
+                     },
+                 }
+        ).then((res) => {
+          setHomed(res.data.data)
+        })        
+      }, [])
+
   return (
     <>
     <div className='w-screen h-[80px] z-50 bg-zinc-200 fixed drop-shadow-sm'>
@@ -28,16 +45,28 @@ const Navbar = () => {
             <div className='flex items-center h-full'>
                 <NavLink to="/shop"><h1 className='text-3xl font-bold mr-4 sm:text-4xl cursor-pointer'>STORE</h1></NavLink>            
                 <ul className='hidden md:flex'> 
-                    <NavLink to="/women"><li>Women</li></NavLink> 
-                    <NavLink to="/men"><li onMouseEnter={() => setDropdown(true)} onMouseLeave={() => setDropdown(false)}>Men</li></NavLink>
-                    <NavLink to="/checkout"><li>Kids</li></NavLink> 
+                    {homed?.map((item:any) => {
+                        return (
+                            <NavLink to={item.attributes.title.toLowerCase()} onMouseEnter={() => { 
+                                setNu(item.id - 1)
+                                setDropdown(true)
+                                }}
+                                onMouseLeave={() => setDropdown(false)} onClick={() => {setDropdown(false)}}
+                                ><li>{item.attributes.title}</li></NavLink> 
+                        )
+                    }).reverse()}
+                    {/* <NavLink to="/men"><li onMouseEnter={() => setDropdown(true)} onMouseLeave={() => setDropdown(false)} onClick={() => {setDropdown(false)}}>Men</li></NavLink> */}
+                    {/* <NavLink to="/checkout"><li>Kids</li></NavLink>  */}
                 </ul> 
             </div>
             <div className='hidden md:flex pr-4 text-xl items-center'>     
                 {<input type="text" placeholder='search...' className={`w-30 text-base rounded-sm border mr-[400px] ${search ? '' : '-translate-y-20'} transition-all duration-500 border-zinc-400 p-3 h-8  mr-4 outline-none`}  />}
                 <button onClick={() => {setSearch(!search)}} className='px-4 py-3'><BsSearch /></button>
                 {/* <button className='px-4 py-3' onClick={clicked} >{choice ? <BsPerson /> : <BsPersonFill /> }</button>   */}
-                <NavLink to='/wishlist'><button className='px-4 py-3'><BsHeart /></button></NavLink>                       
+                <NavLink to='/wishlist'><button className='px-4 py-3 relative'>
+                    <BsHeart />
+                    <span className='absolute flex justify-center text-black text-[18px] bottom-0 right-1'>{wishQuantity > 0 && wishQuantity}</span>
+                </button></NavLink>                       
                 <NavLink to="/cart"><button className='px-4 py-3 relative'>
                     <BsHandbag />
                     <span className='absolute flex justify-center text-black text-[18px] bottom-0 right-1'>{cartQuantity > 0 && cartQuantity}</span>
@@ -50,10 +79,15 @@ const Navbar = () => {
         </div> 
             {dropdown && 
         <motion.div initial={{opacity: 0}} animate={{opacity: 1,}} exit={{opacity: 0, transition: {duration: 0}} } transition={{duration: 0.1}}        > 
-            <ul onMouseEnter={() => setDropdown(true)} onMouseLeave={() => setDropdown(false)} className='w-full bg-zinc-200 px-24 -translate-y-3'>
-                <li>Shoes</li>
+            <ul onMouseEnter={() => setDropdown(true)} onMouseLeave={() => setDropdown(false)} onClick={() => {setDropdown(false)}} className='w-full bg-zinc-200 px-24 -translate-y-3'>
+                {/* <li>Shoes</li>
                 <li>Bags</li>
-                <li>Hats</li>
+                <li>Hats</li> */}
+                {homed[nu].attributes.sub_categories.data.map((item:any) => {
+                    return (                     
+                            <NavLink to={`${homed[nu]?.attributes.title.toLowerCase()}/${item.attributes.title.toLowerCase()}`} ><li>{item.attributes.title}</li></NavLink>
+                    )
+                })}
             </ul>
         </motion.div>
             }
@@ -69,7 +103,7 @@ const Navbar = () => {
         </ul>
     </div>
     {dropdown && <motion.div initial={{opacity: 0}} animate={{opacity: 0.4}} exit={{opacity: 0, transition: {duration: 0}} } transition={{duration: 0.2}}  
-    className="h-[70vh] top-auto w-screen inset-0 fixed bg-black opacity-50 z-40"></motion.div>}
+    className="h-[77vh] top-auto w-screen inset-0 fixed bg-black opacity-50 z-40"></motion.div>}
     </>
   )
 }

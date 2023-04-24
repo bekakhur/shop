@@ -21,11 +21,13 @@ export function Home () {
         })        
       }, [])
 
+      const [g, setg] = useState<any>(1)
+
     document.title = `Brand Home | Shop Online`
     console.log(homed)
     return (
         <motion.div className=" p-10 px-[120px]" 
-        initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0, transition: {duration: 0.1}} } transition={{duration: 1}}
+        initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0, transition: {duration: 0}} } transition={{duration: 1}}
         >
             <div className="grid lg:grid-cols-2 gap-10 mb-4">
                 <div className="flex justify-center h-[600px]">
@@ -49,7 +51,22 @@ export function Home () {
                     <img src={process.env.REACT_APP_UPLOAD_URL+homed[1]?.attributes?.img?.data?.attributes?.url} alt=""/>
                 </div>
             </div>
-
+            <div className="gap-3 hidden">
+                {homed.map((item:any) => {
+                    return (
+                        <div>
+                            <p onMouseEnter={() => {setg(item.id - 1)}} >{item.attributes.title}</p>
+                        </div>
+                    )
+                }).reverse()}
+            </div>
+            <div className="h-10 hidden">
+                {homed[g]?.attributes?.sub_categories?.data.map((item:any) => {
+                return (
+                    <p>{item.attributes.title}</p>
+                    )
+                })}
+            </div>
         </motion.div>
     )
 }

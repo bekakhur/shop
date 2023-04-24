@@ -5,9 +5,9 @@ import {useState, useEffect} from 'react'
 import axios from 'axios'
 import { Strapi } from '../types'
 import { useShoppingCart } from '../context/ShoppingCartContext'
-import { BsHeart, BsHeartFill} from 'react-icons/bs'
 import Newp from "../components/Newp"
 import {motion} from 'framer-motion'
+import { BsHeart, BsHeartFill } from "react-icons/bs"
 
 
 
@@ -16,7 +16,7 @@ const Singlepage = ({strap}: Strapi) => {
     const {id} = useParams()
     const [post, setPost] = useState<any>()
     const sid = Number(id)
-    const {increaseCartQuantity, cartItems} = useShoppingCart()
+    const {increaseCartQuantity, addWish, cartItems, wish} = useShoppingCart()
 
     useEffect(() => {
         axios.get(
@@ -34,7 +34,7 @@ const Singlepage = ({strap}: Strapi) => {
       {post && (document.title = `${post?.attributes?.title} ${post?.attributes?.desc}`)}     
       
     return (
-        <motion.div className="flex flex-col items-center" initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0, transition: {duration: 0.1}} } transition={{duration: 1}} >
+        <motion.div className="flex flex-col items-center" initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0, transition: {duration: 0}} } transition={{duration: 1}} >
             <div className="min-h-[80vh]">
             {post && (
                 <div className='flex p-10 gap-2 justify-center min-h-[80vh]'>
@@ -54,15 +54,17 @@ const Singlepage = ({strap}: Strapi) => {
                         <p>{post?.attributes?.desc}</p>
                         <div className='flex gap-4'>
                             <button onClick={() => increaseCartQuantity(sid)} className="p-4 bg-zinc-800 hover:text-white hover:bg-zinc-600 text-white rounded-md w-[300px]">
-                                ADD TO BAG
+                                {cartItems.find(item => item.id === sid) ? "REMOVE FROM BAG" : "ADD TO BAG"}
                             </button> 
-                            <button className='p-4 border-2 rounded-lg w-[150px]'>WISHLIST</button>
+                            <button onClick={() => addWish(sid)} className='p-4 border-2 rounded-lg w-[150px] flex items-center gap-3 hover:text-black'>WISHLIST
+                            {wish.find(item => item.id === sid) ? <BsHeartFill /> : <BsHeart /> }
+                            </button>
                         </div>
                     </div>
                 </div>
             )}
             </div>
-            <Newp strap={strap} />
+            <Newp strap={strap} sid={sid} />
         </motion.div>
     )
 }

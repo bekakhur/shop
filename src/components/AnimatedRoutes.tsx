@@ -17,7 +17,7 @@ const AnimatedRoutes = ({strap}: Strapi) => {
         <AnimatePresence mode='wait'>
             < Routes location={location} key={location.pathname}>
                 <Route path="/shop" element={<Home />} />
-                <Route path="/wishlist" element={<WishList />} />
+                <Route path="/wishlist" element={<WishList strap={strap}  />} />
                 <Route path="/checkout" element={<Checker />}/>
                 <Route path="/men" element={ <Men strap={strap} />} />
                 <Route path="cart/" element={<Cart strap={strap}/>} />

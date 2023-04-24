@@ -15,7 +15,7 @@ const Checker = () => {
   }
 
   return (
-    <motion.div className='flex flex-col items-center pt-10 gap-10 min-h-screen' initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0, transition: {duration: 0.1}} } transition={{duration: 1}}>
+    <motion.div className='flex flex-col items-center pt-10 gap-10 min-h-screen' initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0, transition: {duration: 0}} } transition={{duration: 1}}>
         {sub ? <div className='text-6xl mt-[100px] shadow-2xl border-2 bg-green-300 py-[150px] px-6 rounded-full'>
           COMPLETED
         </div> : <>
